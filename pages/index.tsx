@@ -2,7 +2,8 @@ import commerce from '@lib/api/commerce'
 import { Layout } from '@components/common'
 import { ProductCard } from '@components/product'
 import { Grid, Marquee, Hero } from '@components/ui'
-import IntroSection from '@components/partials/home/intro-section';
+import IntroSection from '@components/partials/home/intro-section'
+import ProductCollection from '@components/partials/home/product-collection'
 // import HomeAllProductsGrid from '@components/common/HomeAllProductsGrid'
 import type { GetStaticPropsContext, InferGetStaticPropsType } from 'next'
 
@@ -13,7 +14,7 @@ export async function getStaticProps({
 }: GetStaticPropsContext) {
   const config = { locale, locales }
   const productsPromise = commerce.getAllProducts({
-    variables: { first: 6 },
+    variables: { first: 10 },
     config,
     preview,
     // Saleor provider only
@@ -41,7 +42,17 @@ export default function Home({
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   return (
     <>
-      <IntroSection />
+      <h1 className="d-none">Riode React eCommerce Template - Home</h1>
+
+      <div className="page-content">
+        <div className="container">
+          <IntroSection />
+          
+          <ProductCollection products={products} />
+
+        </div>
+      </div>
+      
       <Grid variant="filled">
         {products.slice(0, 3).map((product: any, i: number) => (
           <ProductCard

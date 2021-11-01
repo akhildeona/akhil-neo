@@ -60,10 +60,6 @@ main {
     position: relative;
 }
 
-body:not(.loaded) * {
-    transition: all 0s !important;
-}
-
 .loaded .page-wrapper {
     opacity: 1;
 }

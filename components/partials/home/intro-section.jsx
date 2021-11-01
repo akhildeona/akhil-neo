@@ -30,7 +30,7 @@ function IntroSection() {
                 <Reveal keyframes={ fadeInRightShorter } delay={ 100 } duration={ 1200 } className="h-100" triggerOnce>
                     <div className="category category-banner text-white overlay-zoom category-absolute" style={ { backgroundColor: "#f0f0f0" } }>
                         <figure className="category-media">
-                            <img src="./images/home/categories/1.jpg" alt="category" width="585" height="434" />
+                            <img src="https://images.unsplash.com/photo-1502301197179-65228ab57f78?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1370&q=80" alt="category" width="585" height="434" />
                         </figure>
 
                         <div className="category-content">
@@ -48,7 +48,7 @@ function IntroSection() {
                 <Reveal keyframes={ fadeInLeftShorter } delay={ 200 } duration={ 1200 } className="h-100" triggerOnce>
                     <div className="category category-banner overlay-zoom category-absolute" style={ { backgroundColor: "#dae0e0" } }>
                         <figure className="category-media">
-                            <img src="./images/home/categories/2.jpg" alt="category" width="585" height="434" />
+                            <img src="https://images.unsplash.com/photo-1531938716357-224c16b5ace3?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=387&q=80" alt="category" width="585" height="434" />
                         </figure>
 
                         <div className="category-content">
@@ -66,7 +66,7 @@ function IntroSection() {
                 <Reveal keyframes={ fadeInUpShorter } delay={ 300 } duration={ 1200 } className="h-100" triggerOnce>
                     <div className="category category-banner overlay-zoom category-absolute text-white" style={ { backgroundColor: "#e6e6e6" } }>
                         <figure className="category-media">
-                            <img src="./images/home/categories/4.jpg" alt="category" width="585" height="434" />
+                            <img src="https://images.unsplash.com/photo-1581553680321-4fffae59fccd?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=870&q=80" alt="category" width="585" height="434" />
                         </figure>
 
                         <div className="category-content">
@@ -84,7 +84,7 @@ function IntroSection() {
                 <Reveal keyframes={ fadeInLeftShorter } delay={ 400 } duration={ 1200 } className="h-100" triggerOnce>
                     <div className="category category-banner overlay-zoom category-absolute text-white" style={ { backgroundColor: "#ce9174" } }>
                         <figure className="category-media">
-                            <img src="./images/home/categories/5.jpg" alt="category" width="585" height="434" />
+                            <img src="https://images.unsplash.com/photo-1541336318489-083c7d277b8e?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=387&q=80" alt="category" width="585" height="434" />
                         </figure>
 
                         <div className="category-content">
@@ -102,7 +102,7 @@ function IntroSection() {
                 <Reveal keyframes={ fadeInRightShorter } delay={ 200 } duration={ 1200 } className="h-100" triggerOnce>
                     <div className="category category-banner overlay-zoom category-absolute" style={ { backgroundColor: "#ebebeb" } }>
                         <figure className="category-media">
-                            <img src="./images/home/categories/3.jpg" alt="category" width="585" height="434" />
+                            <img src="https://images.unsplash.com/photo-1522199710521-72d69614c702?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=872&q=80" alt="category" width="585" height="434" />
                         </figure>
 
                         <div className="category-content">
