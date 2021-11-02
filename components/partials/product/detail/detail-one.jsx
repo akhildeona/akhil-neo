@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 
-import { useUI,Text } from '@components/ui'
+import { useUI, Text } from '@components/ui'
 import { useAddItem } from '@framework/cart'
 import { ProductOptions } from '@components/product'
 import Quantity from '@components/features/quantity';
@@ -15,7 +15,7 @@ import { toDecimal } from '@utils';
 function DetailOne(props) {
     let router = useRouter();
     const { product, isStickyCart = false, adClass = '', isNav = true } = props;
-    const { onChangeVariant , toggleWishlist, addToCart, wishlist } = props;
+    const { onChangeVariant, toggleWishlist, addToCart, wishlist } = props;
     const [curColor, setCurColor] = useState('null');
     const [curSize, setCurSize] = useState('null');
     const [curIndex, setCurIndex] = useState(-1);
@@ -225,6 +225,7 @@ function DetailOne(props) {
                 options={product.options}
                 selectedOptions={selectedOptions}
                 setSelectedOptions={(p) => {
+                    setSelectedOptions(p)
                     var vari = product.variants.find((d) => {
                         var what = d.options.filter(opt => selectedOptions[opt.displayName.toLowerCase()] === opt.values[0].label.toLowerCase())
                         return what.length === Object.keys(selectedOptions).length
@@ -235,9 +236,8 @@ function DetailOne(props) {
                             isDefault: false,
                             url: vari.defaultImage.urlOriginal
                         }
-                        onChangeVariant({...product})
+                        onChangeVariant({ ...product })
                     }
-                    setSelectedOptions(p)
                 }}
             />
             <Text
