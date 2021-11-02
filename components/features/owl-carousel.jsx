@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import Carousel from 'react-owl-carousel2';
 
 // let prevPath;
@@ -19,6 +19,10 @@ function OwlCarousel( props ) {
         autoHeight: false
         // autoplayTimeout: 5000,
     };
+
+    // following two lines solve the problem of shrinking the carousel by width
+    const [dummyState,updateDummyState] = useState(0);
+    useEffect(()=>updateDummyState(1))
 
     useEffect( () => {
         if ( props.onChangeRef ) {
