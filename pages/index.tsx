@@ -1,7 +1,5 @@
 import commerce from '@lib/api/commerce'
 import { Layout } from '@components/common'
-import { ProductCard } from '@components/product'
-import { Grid, Marquee, Hero } from '@components/ui'
 import IntroSection from '@components/partials/home/intro-section'
 import ProductCollection from '@components/partials/home/product-collection'
 import BannerSection from '@components/partials/home/banner-section'

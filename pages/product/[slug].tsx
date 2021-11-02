@@ -8,9 +8,7 @@ import commerce from '@lib/api/commerce'
 import Helmet from 'react-helmet';
 
 import { Layout } from '@components/common'
-import { ProductView } from '@components/product'
-import MediaThree from '@components/partials/product/media/media-three';
-import DetailOne from '@components/partials/product/detail/detail-one';
+import ProductOne from '@components/partials/product/product-one'
 
 export async function getStaticProps({
   params,
@@ -87,20 +85,14 @@ export default function Slug({
       <h1 className="d-none">Riode React eCommerce Template - Product Masonry</h1>
 
       <div className={`page-content mb-10 pb-6`}>
+        {/* <ProductView product={product} relatedProducts={relatedProducts}/> */}
         <div className="container skeleton-body">
-          <div className="product product-single row mb-2">
-            <div className="col-md-6">
-              <MediaThree product={product} />
-            </div>
+          
+        <ProductOne product={product} />
 
-            <div className="col-md-6">
-              <DetailOne product={product} isSticky={true} isDesc={true} />
-            </div>
-          </div>
+          {/* <DescOne product={product} isGuide={false} isShipping={true} /> */}
 
-          {/* <DescOne product={product} isGuide={false} isShipping={true} />
-
-            <RelatedProducts products={related} /> */}
+          {/*<RelatedProducts products={related} /> */}
         </div>
       </div>
     </main>

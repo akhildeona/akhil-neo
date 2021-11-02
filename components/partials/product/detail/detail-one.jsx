@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 
-
+import { useUI,Text } from '@components/ui'
+import { useAddItem } from '@framework/cart'
+import { ProductOptions } from '@components/product'
+import Quantity from '@components/features/quantity';
 import ALink from '@components/features/custom-link';
 import Countdown from '@components/features/countdown';
-import Quantity from '@components/features/quantity';
 
 import ProductNav from '@components/partials/product/product-nav';
 
@@ -13,12 +15,22 @@ import { toDecimal } from '@utils';
 function DetailOne(props) {
     let router = useRouter();
     const { product, isStickyCart = false, adClass = '', isNav = true } = props;
-    const { toggleWishlist, addToCart, wishlist } = props;
+    const { onChangeVariant , toggleWishlist, addToCart, wishlist } = props;
     const [curColor, setCurColor] = useState('null');
     const [curSize, setCurSize] = useState('null');
     const [curIndex, setCurIndex] = useState(-1);
     const [cartActive, setCartActive] = useState(false);
     const [quantity, setQauntity] = useState(1);
+
+    var sOpt = {};
+    product.options.forEach((opt) => {
+        opt.values.forEach((v) => {
+            if (v.isDefault) {
+                sOpt[opt.displayName.toLowerCase()] = v.label.toLowerCase();
+            }
+        })
+    })
+    const [selectedOptions, setSelectedOptions] = useState(sOpt)
 
     // decide if the product is wishlisted
     let isWishlisted, colors = [], sizes = [];
@@ -109,6 +121,24 @@ function DetailOne(props) {
         }
     }
 
+    const [loading, setLoading] = useState(false)
+    const addItem = useAddItem()
+    const { openSidebar } = useUI()
+
+    const bcAddToCart = async () => {
+        setLoading(true)
+        try {
+            await addItem({
+                productId: String(product.id),
+                // variantId: String(variant ? variant.id : product.variants[0].id),
+            })
+            openSidebar()
+            setLoading(false)
+        } catch (err) {
+            setLoading(false)
+        }
+    }
+
     const resetValueHandler = (e) => {
         setCurColor('null');
         setCurSize('null');
@@ -153,12 +183,12 @@ function DetailOne(props) {
                 SKU: <span className='product-sku'>{product.sku}</span>
                 CATEGORIES: <span className='product-brand'>
                     {
-                        product.categories?.edges?.map((item, index) =>
-                            <React.Fragment key={item.name + '-' + index}>
-                                <ALink href={{ pathname: '/shop', query: { category: item.slug } }}>
-                                    {item.name}
+                        product.categories?.edges?.map(({ node }, index) =>
+                            <React.Fragment key={node.name + '-' + index}>
+                                <ALink href={{ pathname: '/shop', query: { category: node.path } }}>
+                                    {node.name}
                                 </ALink>
-                                {index < product.categories.length - 1 ? ', ' : ''}
+                                {index < product.categories.edges.length - 1 ? ', ' : ''}
                             </React.Fragment>
                         )}
                 </span>
@@ -188,10 +218,32 @@ function DetailOne(props) {
                                     product.reviewSummary.summationOfRatings / product.reviewSummary.numberOfReviews)}</span>
                 </div>
 
-                <ALink href="#" className="rating-reviews">( {product.reviews} reviews )</ALink>
+                <ALink href="#" className="rating-reviews">( {product.reviewSummary.numberOfReviews} reviews )</ALink>
             </div>
 
-            <p className="product-short-desc">{product.short_description}</p>
+            <ProductOptions
+                options={product.options}
+                selectedOptions={selectedOptions}
+                setSelectedOptions={(p) => {
+                    var vari = product.variants.find((d) => {
+                        var what = d.options.filter(opt => selectedOptions[opt.displayName.toLowerCase()] === opt.values[0].label.toLowerCase())
+                        return what.length === Object.keys(selectedOptions).length
+                    })
+                    if (vari) {
+                        product.images[0] = {
+                            alt: vari.defaultImage.altText,
+                            isDefault: false,
+                            url: vari.defaultImage.urlOriginal
+                        }
+                        onChangeVariant({...product})
+                    }
+                    setSelectedOptions(p)
+                }}
+            />
+            <Text
+                className="pb-4 break-words w-full max-w-xl"
+                html={product.descriptionHtml || product.description}
+            />
 
             {
                 product && product.variants.length > 0 ?
@@ -275,13 +327,13 @@ function DetailOne(props) {
                         <div className="container">
                             <div className="sticky-product-details">
                                 <figure className="product-image">
-                                    <ALink href={'/product/default/' + product.slug}>
-                                        <img src={process.env.NEXT_PUBLIC_ASSET_URI + product.pictures[0].url} width="90" height="90"
+                                    <ALink href={'/product/' + product.path}>
+                                        <img src={product.images[0].url} width="90" height="90"
                                             alt="Product" />
                                     </ALink>
                                 </figure>
                                 <div>
-                                    <h4 className="product-title"><ALink href={'/product/default/' + product.slug}>{product.name}</ALink></h4>
+                                    <h4 className="product-title"><ALink href={'/product/' + product.path}>{product.name}</ALink></h4>
                                     <div className="product-info">
                                         <div className="product-price mb-0">
                                             {
@@ -306,16 +358,19 @@ function DetailOne(props) {
                                                             </>
                                                             :
                                                             < del className="new-price">${toDecimal(product.price[0])} – ${toDecimal(product.price[1])}</del>
-                                                        : <ins className="new-price">${toDecimal(product.price[0])}</ins>
+                                                        : <ins className="new-price">${toDecimal(product.price.value)}</ins>
                                             }                                        </div>
 
                                         <div className="ratings-container mb-0">
                                             <div className="ratings-full">
-                                                <span className="ratings" style={{ width: 20 * product.ratings + '%' }}></span>
-                                                <span className="tooltiptext tooltip-top">{toDecimal(product.ratings)}</span>
+                                                <span className="ratings"
+                                                    style={product.reviewSummary.numberOfReviews === 0 ?
+                                                        { width: 0 } :
+                                                        { width: 20 * (product.reviewSummary.summationOfRatings / product.reviewSummary.numberOfReviews) + '%' }}></span>
+                                                <span className="tooltiptext tooltip-top">{toDecimal(product.reviewSummary.summationOfRatings / product.reviewSummary.numberOfReviews)}</span>
                                             </div>
 
-                                            <ALink href="#" className="rating-reviews">( {product.reviews} reviews )</ALink>
+                                            <ALink href="#" className="rating-reviews">( {product.reviewSummary.numberOfReviews} reviews )</ALink>
                                         </div>
                                     </div>
                                 </div>
@@ -324,7 +379,7 @@ function DetailOne(props) {
                                 <label className="d-none">QTY:</label>
                                 <div className="product-form-group">
                                     <Quantity max={product.stock} product={product} onChangeQty={changeQty} />
-                                    <button className={`btn-product btn-cart text-normal ls-normal font-weight-semi-bold ${cartActive ? '' : 'disabled'}`} onClick={addToCartHandler}><i className='d-icon-bag'></i>Add to Cart</button>
+                                    <button className={`btn-product btn-cart text-normal ls-normal font-weight-semi-bold ${cartActive ? '' : 'disabled'}`} onClick={bcAddToCart}><i className='d-icon-bag'></i>Add to Cart</button>
                                 </div>
                             </div>
                         </div>
@@ -334,7 +389,7 @@ function DetailOne(props) {
                         <label className="d-none">QTY:</label>
                         <div className="product-form-group">
                             <Quantity max={product.stock} product={product} onChangeQty={changeQty} />
-                            <button className={`btn-product btn-cart text-normal ls-normal font-weight-semi-bold ${cartActive ? '' : 'disabled'}`} onClick={addToCartHandler}><i className='d-icon-bag'></i>Add to Cart</button>
+                            <button className={`btn-product btn-cart text-normal ls-normal font-weight-semi-bold `} onClick={bcAddToCart}><i className='d-icon-bag'></i>Add to Cart</button>
                         </div>
                     </div>
             }
