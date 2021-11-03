@@ -11,6 +11,7 @@ import Countdown from '@components/features/countdown';
 import ProductNav from '@components/partials/product/product-nav';
 
 import { toDecimal } from '@utils';
+import { getProductVariant } from '@components/product/helpers'
 
 function DetailOne(props) {
     let router = useRouter();
@@ -99,43 +100,18 @@ function DetailOne(props) {
         setCurSize(e.target.value);
     }
 
-    const addToCartHandler = () => {
-        if (product.stock > 0 && cartActive) {
-            if (product.variants.length > 0) {
-                let tmpName = product.name, tmpPrice;
-                tmpName += curColor !== 'null' ? '-' + curColor : '';
-                tmpName += curSize !== 'null' ? '-' + curSize : '';
-
-                if (product.price[0] === product.price[1]) {
-                    tmpPrice = product.price[0];
-                } else if (!product.variants[0].price && product.discount > 0) {
-                    tmpPrice = product.price[0];
-                } else {
-                    tmpPrice = product.variants[curIndex].sale_price ? product.variants[curIndex].sale_price : product.variants[curIndex].price;
-                }
-
-                addToCart({ ...product, name: tmpName, qty: quantity, price: tmpPrice });
-            } else {
-                addToCart({ ...product, qty: quantity, price: product.price[0] });
-            }
-        }
-    }
-
-    const [loading, setLoading] = useState(false)
     const addItem = useAddItem()
     const { openSidebar } = useUI()
 
+    const variant = getProductVariant(product, selectedOptions)
     const bcAddToCart = async () => {
-        setLoading(true)
         try {
             await addItem({
                 productId: String(product.id),
-                // variantId: String(variant ? variant.id : product.variants[0].id),
+                variantId: String(variant ? variant.id : product.variants[0].id),
             })
             openSidebar()
-            setLoading(false)
         } catch (err) {
-            setLoading(false)
         }
     }
 
