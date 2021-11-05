@@ -4,7 +4,6 @@ import { useRouter } from 'next/router';
 import { useUI, Text } from '@components/ui'
 import { useAddItem } from '@framework/cart'
 import { ProductOptions } from '@components/product'
-import Quantity from '@components/features/quantity';
 import ALink from '@components/features/custom-link';
 import Countdown from '@components/features/countdown';
 
@@ -16,12 +15,10 @@ import { getProductVariant } from '@components/product/helpers'
 function DetailOne(props) {
     let router = useRouter();
     const { product, isStickyCart = false, adClass = '', isNav = true } = props;
-    const { onChangeVariant, toggleWishlist, addToCart, wishlist } = props;
+    const { onChangeVariant, toggleWishlist } = props;
     const [curColor, setCurColor] = useState('null');
     const [curSize, setCurSize] = useState('null');
     const [curIndex, setCurIndex] = useState(-1);
-    const [cartActive, setCartActive] = useState(false);
-    const [quantity, setQauntity] = useState(1);
 
     var sOpt = {};
     product.options.forEach((opt) => {
@@ -62,17 +59,13 @@ function DetailOne(props) {
     useEffect(() => {
         if (product.variants.length > 0) {
             if ((curSize !== 'null' && curColor !== 'null') || (curSize === 'null' && product.variants[0].size === null && curColor !== 'null') || (curColor === 'null' && product.variants[0].color === null && curSize !== 'null')) {
-                setCartActive(true);
                 setCurIndex(product.variants.findIndex(item => (item.size !== null && item.color !== null && item.color.name === curColor && item.size.name === curSize) || (item.size === null && item.color.name === curColor) || (item.color === null && item.size.name === curSize)));
             } else {
-                setCartActive(false);
             }
         } else {
-            setCartActive(true);
         }
 
         if (product.stock === 0) {
-            setCartActive(false);
         }
     }, [curColor, curSize, product])
 
@@ -104,7 +97,7 @@ function DetailOne(props) {
     const { openSidebar } = useUI()
 
     const variant = getProductVariant(product, selectedOptions)
-    const bcAddToCart = async () => {
+    const addToCart = async () => {
         try {
             await addItem({
                 productId: String(product.id),
@@ -132,10 +125,6 @@ function DetailOne(props) {
         }
 
         return product.variants.findIndex(item => item.color.name === color && item.size.name === size) === -1;
-    }
-
-    function changeQty(qty) {
-        setQauntity(qty);
     }
 
     return (
@@ -354,8 +343,7 @@ function DetailOne(props) {
                             <div className="product-form product-qty pb-0">
                                 <label className="d-none">QTY:</label>
                                 <div className="product-form-group">
-                                    <Quantity max={product.stock} product={product} onChangeQty={changeQty} />
-                                    <button className={`btn-product btn-cart text-normal ls-normal font-weight-semi-bold `} onClick={bcAddToCart}><i className='d-icon-bag'></i>Add to Cart</button>
+                                    <button className={`btn-product btn-cart text-normal ls-normal font-weight-semi-bold `} onClick={addToCart}><i className='d-icon-bag'></i>Add to Cart</button>
                                 </div>
                             </div>
                         </div>
@@ -364,8 +352,7 @@ function DetailOne(props) {
                     <div className="product-form product-qty pb-0">
                         <label className="d-none">QTY:</label>
                         <div className="product-form-group">
-                            <Quantity max={product.stock} product={product} onChangeQty={changeQty} />
-                            <button className={`btn-product btn-cart text-normal ls-normal font-weight-semi-bold `} onClick={bcAddToCart}><i className='d-icon-bag'></i>Add to Cart</button>
+                            <button className={`btn-product btn-cart text-normal ls-normal font-weight-semi-bold `} onClick={addToCart}><i className='d-icon-bag'></i>Add to Cart</button>
                         </div>
                     </div>
             }

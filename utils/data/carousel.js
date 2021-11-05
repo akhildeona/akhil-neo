@@ -350,9 +350,10 @@ export const mainSlider20 = {
 export const introSlider = {
     nav: false,
     dots: true,
-    loop: false,
+    loop: true,
     items: 1,
-    autoplay: false
+    autoplay: true,
+    autoplayTimeout: 3000,
 }
 
 export const serviceSlider = {
