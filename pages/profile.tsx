@@ -21,6 +21,7 @@ export async function getStaticProps({
 }
 
 export default function Profile() {
+  // just started
   const { data } = useCustomer()
   return (
     <Container>
